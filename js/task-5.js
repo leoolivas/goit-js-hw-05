@@ -5,9 +5,9 @@
  */
 
 class Car {
-  static getSpecs({ maxSpeed, speed, isOn, distance, price }) {
+  static getSpecs(car) {
     console.log(
-      `maxSpeed: ${maxSpeed}, speed: ${speed}, isOn: ${isOn}, distance: ${distance}, price: ${price}`
+      `maxSpeed: ${car._maxSpeed}, speed: ${car._speed}, isOn: ${car._isOn}, distance: ${car._distance}, price: ${car._price}`
     );
   }
 
@@ -21,14 +21,14 @@ class Car {
    *  isOn - заведен ли автомобиль, значения true или false. Изначально false
    *  distance - общий киллометраж, изначально 0
    */
-  constructor({ maxSpeed, speed = 0, isOn = false, distance = 0, price }) {
-    this.maxSpeed = maxSpeed;
-    this.speed = speed;
-    this.isOn = isOn;
-    this.distance = distance;
-    this._price = price;
-  }
 
+  constructor({ speed = 0, price, maxSpeed, isOn = false, distance = 0 }) {
+    this._speed = speed;
+    this._price = price;
+    this._maxSpeed = maxSpeed;
+    this._isOn = isOn;
+    this._distance = distance;
+  }
   /*
    * Добавь геттер и сеттер для свойства price,
    * который будет работать с свойством цены автомобиля.
@@ -43,12 +43,12 @@ class Car {
     return this._price;
   }
 
-  set price(price) {
-    this._price = price;
+  set price(newPrice) {
+    this._price = newPrice;
   }
 
-  turnOn(isOn) {
-    isOn === true;
+  turnOn() {
+    this._isOn === true;
   }
 
   /*
@@ -56,9 +56,9 @@ class Car {
    * Записывает в свойство isOn значение false,
    * и сбрасывает текущую скорость в 0
    */
-  turnOff(isOn) {
-    isOn === false;
-    this.speed === 0;
+  turnOff() {
+    this._isOn === false;
+    this._speed === 0;
   }
 
   /*
@@ -66,29 +66,30 @@ class Car {
    * при условии что результирующая скорость
    * не больше чем значение свойства maxSpeed
    */
+
   accelerate(value) {
-    if (this.speed <= this.maxSpeed) {
-      this.speed += value;
-    }
+    let newSpeed = this._speed + value;
+    this._speed = newSpeed < this._maxSpeed ? newSpeed : this._maxSpeed;
   }
 
   /*
    * Отнимает от свойства speed полученное значение,
    * при условии что результирующая скорость не меньше нуля
    */
+
   decelerate(value) {
-    if (this.speed >= 0) {
-      this.speed - value;
-    }
+    let newSpeed = this._speed - value;
+    this._speed = newSpeed > 0 ? newSpeed : 0;
   }
 
   /*
    * Добавляет в поле distance киллометраж (hours * speed),
    * но только в том случае если машина заведена!
    */
+
   drive(hours) {
-    if (this.isOn === true) {
-      this.distance = hours * this.speed;
+    if (this._isOn) {
+      this._distance += hours * this._speed;
     }
   }
 }
